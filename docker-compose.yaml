@@ -1,0 +1,26 @@
+services:
+  database:
+    image: postgres:17
+    container_name: database
+    env_file:
+      - .env.dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+
+  adminer:
+    image: adminer
+    container_name: adminer
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+
+volumes:
+  pgdata:
