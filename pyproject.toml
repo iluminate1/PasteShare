@@ -1,0 +1,20 @@
+[project]
+name = "pasteshare"
+version = "0.1.0"
+description = "Simple pastbin clone"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "alembic>=1.16.2",
+    "asyncpg>=0.30.0",
+    "fastapi[standard]>=0.115.13",
+    "loguru>=0.7.3",
+    "orjson>=3.10.18",
+    "pydantic-settings>=2.10.1",
+    "sqlalchemy[asyncio]>=2.0.41",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.12.0",
+]
