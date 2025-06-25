@@ -5,16 +5,118 @@ description = "Simple pastbin clone"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "alembic>=1.16.2",
-    "asyncpg>=0.30.0",
-    "fastapi[standard]>=0.115.13",
-    "loguru>=0.7.3",
-    "orjson>=3.10.18",
-    "pydantic-settings>=2.10.1",
-    "sqlalchemy[asyncio]>=2.0.41",
+  "alembic>=1.16.2",
+  "asyncpg>=0.30.0",
+  "fastapi[standard]>=0.115.13",
+  "loguru>=0.7.3",
+  "orjson>=3.10.18",
+  "pydantic-settings>=2.10.1",
+  "sqlalchemy[asyncio]>=2.0.41",
 ]
 
 [dependency-groups]
-dev = [
-    "ruff>=0.12.0",
+dev = ["ruff>=0.12.0"]
+
+[tool.ruff]
+target-version = "py313"
+exclude = [
+  ".bzr",
+  ".direnv",
+  ".eggs",
+  ".git",
+  ".git-rewrite",
+  ".hg",
+  ".ipynb_checkpoints",
+  ".mypy_cache",
+  ".nox",
+  ".pants.d",
+  ".pyenv",
+  ".pytest_cache",
+  ".pytype",
+  ".ruff_cache",
+  ".svn",
+  ".tox",
+  ".venv",
+  ".vscode",
+  "__pypackages__",
+  "_build",
+  "buck-out",
+  "build",
+  "dist",
+  "node_modules",
+  "site-packages",
+  "venv",
+  "alembic",
+  "migrations",
 ]
+
+[tool.ruff.lint]
+select = [
+  "FAST",
+  "ASYNC",
+  "S",
+  "FBT",
+  "B",
+  "A",
+  "COM",
+  "C4",
+  "DTZ",
+  "EM",
+  "INT",
+  "ISC",
+  "LOG",
+  "INP",
+  "PIE",
+  "PYI",
+  "PT",
+  "Q",
+  "RSE",
+  "RET",
+  "SLF",
+  "SIM",
+  "SLOT",
+  "TID",
+  "TC",
+  "ARG",
+  "PTH",
+  "FLY",
+  "I",
+  "N",
+  "PERF",
+  "E",
+  "D",
+  "F",
+  "PLC",
+  "PLE",
+  "PLR",
+  "PLW",
+  "UP",
+  "FURB",
+  "RUF",
+  "TRY",
+
+  # "E4",
+  # "E7",
+  # "E9",
+]
+ignore = [
+  "E501",
+
+  # Doc 
+  "D100",
+  "D101",
+  "D102",
+  "D103",
+  "D104",
+  "D105",
+  "D106",
+  "D107",
+  "D417",
+  "D419",
+
+  "FBT001",
+  "FBT002",
+]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["PLC0414"]
