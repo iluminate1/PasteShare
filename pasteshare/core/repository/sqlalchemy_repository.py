@@ -1,5 +1,6 @@
 from collections.abc import Sequence
 
+from loguru import logger
 from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -27,6 +28,14 @@ class SQLAlchemyRepository[T](IRepository[T]):
 
     async def create(self, entity: BaseModel) -> T:
         entity_data = entity.model_dump(exclude_unset=True)
+
+        logger.debug(
+            "Creating record for {} with data {}",
+            str(self.model.__name__),
+            entity_data,
+        )
+        await logger.complete()
+
         db_entity = self.model(**entity_data)
 
         self._session.add(db_entity)
@@ -38,6 +47,8 @@ class SQLAlchemyRepository[T](IRepository[T]):
     async def remove(self, entity: T) -> T:
         await self._session.delete(entity)
         await self._session.commit()
+
+        logger.debug("Removing record from {}: {}'s", self.model.__name__, str(entity))
 
         return entity
 
