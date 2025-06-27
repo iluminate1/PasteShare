@@ -28,7 +28,7 @@ class UserInDB(Schema):
     name: str
     email: EmailStr
     hashed_password: str
-    is_active: bool
+    is_active: bool = True
     is_super_user: bool = False
 
 
