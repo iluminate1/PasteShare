@@ -12,7 +12,9 @@ from pasteshare.core.exceptions import get_credential_exception
 from pasteshare.core.models import User
 from pasteshare.core.repository import (
     CategoryRepository,
+    CommentRepository,
     LanguageRepository,
+    PasteRepository,
     UserRepository,
 )
 from pasteshare.core.repository.base import SQLAlchemyRepository
@@ -32,6 +34,8 @@ class RepoFactory[T: type[SQLAlchemyRepository]]:
 UserRepo = Annotated[UserRepository, Depends(RepoFactory(UserRepository))]
 CategoryRepo = Annotated[CategoryRepository, Depends(RepoFactory(CategoryRepository))]
 LanguageRepo = Annotated[LanguageRepository, Depends(RepoFactory(LanguageRepository))]
+CommentRepo = Annotated[CommentRepository, Depends(RepoFactory(CommentRepository))]
+PasteRepo = Annotated[PasteRepository, Depends(RepoFactory(PasteRepository))]
 
 
 def get_token(token: str = Depends(oauth2_scheme)) -> TokenPayload:
