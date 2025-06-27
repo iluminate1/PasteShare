@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from pasteshare.core.models.users import User
-from pasteshare.core.repository import SQLAlchemyRepository
+from pasteshare.core.repository.base import SQLAlchemyRepository
 from pasteshare.core.security import verify_password
 
 
@@ -13,7 +13,6 @@ class UserRepository(SQLAlchemyRepository[User]):
 
         Parameters
         ----------
-            db (Session): The database session.
             email (str): The email of the user.
 
         Returns

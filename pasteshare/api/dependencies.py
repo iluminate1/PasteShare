@@ -10,7 +10,11 @@ from pasteshare.core.config import settings
 from pasteshare.core.database import ASession
 from pasteshare.core.exceptions import get_credential_exception
 from pasteshare.core.models import User
-from pasteshare.core.repository import SQLAlchemyRepository, UserRepository
+from pasteshare.core.repository import (
+    CategoryRepository,
+    UserRepository,
+)
+from pasteshare.core.repository.base import SQLAlchemyRepository
 from pasteshare.core.schemas import TokenPayload
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
@@ -25,6 +29,7 @@ class RepoFactory[T: type[SQLAlchemyRepository]]:
 
 
 UserRepo = Annotated[UserRepository, Depends(RepoFactory(UserRepository))]
+CategoryRepo = Annotated[CategoryRepository, Depends(RepoFactory(CategoryRepository))]
 
 
 def get_token(token: str = Depends(oauth2_scheme)) -> TokenPayload:
@@ -134,3 +139,7 @@ def get_current_superuser(
             details="The user does not have enough privileges",
         )
     return current_user
+
+
+ActiveUser = Annotated[User, Depends(get_current_active_user)]
+SuperUser = Annotated[User, Depends(get_current_superuser)]

@@ -6,6 +6,8 @@ from pasteshare.core.models.mixins import TimeStampMixin
 
 
 class User(TimeStampMixin, Base):
+    __tablename__ = "users"
+
     id: Mapped[int] = mapped_column(primary_key=True, index=True)
     name: Mapped[str] = mapped_column(String(25))
     email: Mapped[str] = mapped_column(unique=True, nullable=False)

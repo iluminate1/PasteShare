@@ -18,6 +18,7 @@ class PermissionDenied(DetailedHTTPException):
 
 class NotFound(DetailedHTTPException):
     STATUS_CODE = status.HTTP_404_NOT_FOUND
+    DETAIL = "Item not found"
 
 
 class BadRequest(DetailedHTTPException):
@@ -31,6 +32,11 @@ class NotAuthenticated(DetailedHTTPException):
 
     def __init__(self) -> None:
         super().__init__(headers={"WWW-Authenticate": "Bearer"})
+
+
+class Conflict(DetailedHTTPException):
+    STATUS_CODE = status.HTTP_409_CONFLICT
+    DETAIL = "Item already exist's"
 
 
 def get_credential_exception(
