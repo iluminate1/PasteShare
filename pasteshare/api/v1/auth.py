@@ -8,6 +8,7 @@ from pasteshare.api.dependencies import UserRepo
 from pasteshare.core.config import settings
 from pasteshare.core.schemas import Token, UserInDB, UserRegister
 from pasteshare.core.security import create_access_token, get_password_hash
+from pasteshare.tasks import send_welcome_email
 
 router = APIRouter()
 
@@ -45,7 +46,6 @@ async def register(
     user_repo: UserRepo,
     user_register: UserRegister,
 ):
-
     user = await user_repo.get_user_by_email(email=user_register.email)
     if user:
         raise HTTPException(
@@ -58,5 +58,6 @@ async def register(
         hashed_password=get_password_hash(user_register.password),
     )
 
-    await user_repo.create(user_in)
+    user = await user_repo.create(user_in)
+    await send_welcome_email.kiq(user_id=user.id)
     return {"message": "User created successfully"}

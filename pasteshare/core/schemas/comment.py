@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from pydantic import Field
 
 from pasteshare.core.schemas import ORMSchema, Schema
@@ -15,6 +17,7 @@ class CommentSchemaUpdate(Schema):
 class CommentSchemaOut(ORMSchema):
     id: int
     text: str
+    created_at: datetime
     user: PublicUserOut | None = None
 
 

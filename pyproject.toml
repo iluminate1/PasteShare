@@ -5,6 +5,7 @@ description = "Simple pastbin clone"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+  "aiosmtplib>=4.0.1",
   "alembic>=1.16.2",
   "asyncpg>=0.30.0",
   "fastapi[standard]>=0.115.13",
@@ -14,6 +15,8 @@ dependencies = [
   "pydantic-settings>=2.10.1",
   "python-jose>=3.5.0",
   "sqlalchemy[asyncio]>=2.0.41",
+  "taskiq>=0.11.17",
+  "taskiq-aio-pika>=0.4.2",
 ]
 
 [dependency-groups]

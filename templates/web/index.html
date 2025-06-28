@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PasteShare - A Pastebin Clone</title>
+    <link href="{{ url_for( 'static', path='assets/vendor/css/bootstrap.min.css' )}}" rel="stylesheet">
+    <link href="{{ url_for( 'static', path='assets/vendor/css/default.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for( 'static', path='assets/css/styles.css' )}}">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="#">PasteShare</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="home-link">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="create-link">Create Paste</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="public-pastes-link">Public Pastes</a>
+                    </li>
+                </ul>
+                <div class="d-flex" id="auth-buttons">
+                    <button class="btn btn-outline-light me-2" id="login-btn">Login</button>
+                    <button class="btn btn-light" id="register-btn">Register</button>
+                </div>
+                <div class="d-flex align-items-center d-none" id="user-menu">
+                    <span class="text-white me-3" id="username-display"></span>
+                    <button class="btn btn-outline-light" id="logout-btn">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container mt-4">
+        <!-- Home/Public Pastes View -->
+        <div id="home-view">
+            <div class="row">
+                <div class="col-md-8">
+                    <h2>Recent Public Pastes</h2>
+                    <div id="recent-pastes" class="list-group"></div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            Quick Create
+                        </div>
+                        <div class="card-body">
+                            <form id="quick-paste-form">
+                                <div class="mb-3">
+                                    <label for="quick-title" class="form-label">Title</label>
+                                    <input type="text" class="form-control" id="quick-title" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="quick-content" class="form-label">Content</label>
+                                    <textarea class="form-control" id="quick-content" rows="5" required></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="quick-language" class="form-label">Language</label>
+                                    <select class="form-select" id="quick-language">
+                                        <option value="">Plain Text</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Create Paste</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Create Paste View -->
+        <div id="create-view" class="d-none">
+            <h2>Create New Paste</h2>
+            <form id="paste-form">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="mb-3">
+                            <label for="paste-title" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="paste-title" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="paste-content" class="form-label">Content</label>
+                            <textarea class="form-control" id="paste-content" rows="10" required></textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="paste-language" class="form-label">Language</label>
+                            <select class="form-select" id="paste-language">
+                                <option value="">Plain Text</option>
+                            <!-- Languages will be loaded dynamically -->
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="paste-category" class="form-label">Category</label>
+                            <select class="form-select" id="paste-category">
+                                <option value="">No Category</option>
+                                <!-- Categories will be loaded dynamically -->
+                            </select>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="paste-private">
+                            <label class="form-check-label" for="paste-private">Private Paste</label>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Create Paste</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- View Paste View -->
+        <div id="paste-view" class="d-none">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2 id="paste-view-title"></h2>
+                <div>
+                    <span class="badge bg-secondary me-2" id="paste-view-language"></span>
+                    <span class="badge bg-info" id="paste-view-category"></span>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between">
+                    <span>Content</span>
+                    <span class="text-muted" id="paste-view-created"></span>
+                </div>
+                <div class="card-body">
+                    <pre><code id="paste-view-content"></code></pre>
+                </div>
+                <div class="card-footer text-muted d-flex justify-content-between">
+                    <span>Views: <span id="paste-view-views"></span></span>
+                    <span>By: <span id="paste-view-author"></span></span>
+                </div>
+            </div>
+
+            <!-- Comments Section -->
+            <div class="mb-4">
+                <h4>Comments</h4>
+                <div id="comments-container" class="mb-3"></div>
+                <form id="comment-form" class="d-none">
+                    <div class="mb-3">
+                        <label for="comment-text" class="form-label">Add Comment</label>
+                        <textarea class="form-control" id="comment-text" rows="3" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Post Comment</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- User Profile View -->
+        <div id="profile-view" class="d-none">
+            <h2>User Profile</h2>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title" id="profile-name"></h5>
+                    <p class="card-text" id="profile-email"></p>
+                    <div id="profile-actions" class="d-none">
+                        <button class="btn btn-primary me-2" id="edit-profile-btn">Edit Profile</button>
+                        <button class="btn btn-danger" id="delete-profile-btn">Delete Account</button>
+                    </div>
+                </div>
+            </div>
+
+            <h4>My Pastes</h4>
+            <div id="user-pastes" class="list-group"></div>
+        </div>
+
+        <!-- Edit Profile View -->
+        <div id="edit-profile-view" class="d-none">
+            <h2>Edit Profile</h2>
+            <form id="profile-form">
+                <div class="mb-3">
+                    <label for="edit-name" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="edit-name" required>
+                </div>
+                <div class="mb-3">
+                    <label for="edit-email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="edit-email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="edit-password" class="form-label">New Password (leave blank to keep current)</label>
+                    <input type="password" class="form-control" id="edit-password">
+                </div>
+                <button type="submit" class="btn btn-primary me-2">Save Changes</button>
+                <button type="button" class="btn btn-secondary" id="cancel-edit-btn">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Auth Modals -->
+    <div class="modal fade" id="login-modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Login</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="login-form">
+                        <div class="mb-3">
+                            <label for="login-username" class="form-label">Email</label>
+                            <input type="text" class="form-control" id="login-username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="login-password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="login-password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Login</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="register-modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Register</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="register-form">
+                        <div class="mb-3">
+                            <label for="register-name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="register-name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="register-email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="register-email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="register-password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="register-password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Register</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="{{ url_for( 'static', path='assets/vendor/js/jquery-3.6.0.min.js' ) }}"></script>
+    <script src="{{ url_for( 'static', path='assets/vendor/js/bootstrap.bundle.min.js' ) }}"></script>
+    <script src="{{ url_for( 'static', path='assets/vendor/js/highlight.min.js' ) }}"></script>
+    <script src="{{ url_for( 'static', path='assets/js/app.js' ) }}"></script>
+</body>
+</html>

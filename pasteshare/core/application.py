@@ -10,13 +10,18 @@ from fastapi.staticfiles import StaticFiles
 from loguru import logger
 
 from pasteshare.core import constants
+from pasteshare.core.broker import broker
 from pasteshare.core.config import settings
+from pasteshare.core.database.manager import db_manager
 from pasteshare.core.logger import InterceptHandler
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None]:  # noqa: ARG001
+    await broker.startup()
     yield
+    await db_manager.dispose()
+    await broker.shutdown()
 
 
 def create_app() -> FastAPI:
@@ -77,7 +82,7 @@ def register_middleware(app: FastAPI) -> None:
     )
 
 
-def register_logger(register: bool = False) -> None:  
+def register_logger(register: bool = False) -> None:
     if not register:
         return
 

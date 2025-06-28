@@ -26,6 +26,10 @@ class ServerSettings(BaseModel):
     CORS_HEADERS: list[str] = ["*"]
 
 
+class TaskiqSettings(BaseModel):
+    URL: str = "amqp://guest:guest@localhost:5672//"
+
+
 class DatabaseSettings(BaseModel):
     POSTGRES_USER: str = "user"
     POSTGRES_PASSWORD: str = "password"  # noqa: S105
@@ -57,6 +61,7 @@ class Settings(BaseSettings):
     app: AppSettings = AppSettings()
     jwt: JWTSettings = JWTSettings()
     server: ServerSettings = ServerSettings()
+    taskiq: TaskiqSettings = TaskiqSettings() 
     database: DatabaseSettings = DatabaseSettings()
 
 
