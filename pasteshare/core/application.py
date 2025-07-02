@@ -11,6 +11,7 @@ from loguru import logger
 
 from pasteshare.core import constants
 from pasteshare.core.broker import broker
+from pasteshare.core.cache import cache
 from pasteshare.core.config import settings
 from pasteshare.core.database.manager import db_manager
 from pasteshare.core.logger import InterceptHandler
@@ -19,9 +20,11 @@ from pasteshare.core.logger import InterceptHandler
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator[None]:  # noqa: ARG001
     await broker.startup()
+    logger.info(f"Ping successful: {await cache.ping()}")
     yield
     await db_manager.dispose()
     await broker.shutdown()
+    await cache.close()
 
 
 def create_app() -> FastAPI:

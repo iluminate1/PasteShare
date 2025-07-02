@@ -30,6 +30,14 @@ class TaskiqSettings(BaseModel):
     URL: str = "amqp://guest:guest@localhost:5672//"
 
 
+class RedisSettings(BaseModel):
+    HOST: str = "localhost"
+    PORT: int = 6379
+    DB: int = 0
+    USER: str = "user"
+    PASSWORD: str = "password"  # noqa: S105
+
+
 class DatabaseSettings(BaseModel):
     POSTGRES_USER: str = "user"
     POSTGRES_PASSWORD: str = "password"  # noqa: S105
@@ -61,7 +69,8 @@ class Settings(BaseSettings):
     app: AppSettings = AppSettings()
     jwt: JWTSettings = JWTSettings()
     server: ServerSettings = ServerSettings()
-    taskiq: TaskiqSettings = TaskiqSettings() 
+    taskiq: TaskiqSettings = TaskiqSettings()
+    redis: RedisSettings = RedisSettings()
     database: DatabaseSettings = DatabaseSettings()
 
 

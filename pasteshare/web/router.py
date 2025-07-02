@@ -3,7 +3,7 @@ from fastapi.responses import HTMLResponse
 
 from pasteshare.core.templates import templates
 
-router = APIRouter()
+router = APIRouter(include_in_schema=False)
 
 
 @router.get("/", response_class=HTMLResponse)
